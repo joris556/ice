@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SQLite;
 
 namespace IceStatistieken
 {
@@ -28,6 +29,11 @@ namespace IceStatistieken
             dropCalBet.Items.AddRange(exOpties);
             dropCalBet.Visible = false;
             dropCallert.Items.AddRange(names);
+
+            //devmodus
+            inputbox.Visible = false;
+            outputbox.Visible = false;
+            querybutton.Visible = false;
         }
 
         private void butAdd_Click(object sender, EventArgs e)
@@ -63,6 +69,29 @@ namespace IceStatistieken
 
         }
 
+        private void devmode_CheckedChanged(object sender, EventArgs e)
+        {
+            if (devmode.Checked)
+            {
+                inputbox.Visible = true;
+                outputbox.Visible = true;
+                querybutton.Visible = true;
+            }
+            else
+            {
+                inputbox.Visible = false;
+                outputbox.Visible = false;
+                querybutton.Visible = false;
+            }
+        }
+
+        private void querybutton_Click(object sender, EventArgs e)
+        {
+            outputbox.Text = "hey ";
+            outputbox.AppendText(Environment.NewLine);
+            outputbox.AppendText("hoi");
+        }
+
         private void reset()
         {
             vindert = "";
@@ -80,6 +109,7 @@ namespace IceStatistieken
             dropCallert.Text = "Door wie?";
             dropCallert.Visible = false;
             dropCalBet.Visible = false;
+            finalText.Text = "";
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

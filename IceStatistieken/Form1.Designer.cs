@@ -43,6 +43,10 @@
             this.label6 = new System.Windows.Forms.Label();
             this.butAdd = new System.Windows.Forms.Button();
             this.finalText = new System.Windows.Forms.Label();
+            this.devmode = new System.Windows.Forms.CheckBox();
+            this.inputbox = new System.Windows.Forms.TextBox();
+            this.outputbox = new System.Windows.Forms.TextBox();
+            this.querybutton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numTijd)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,7 +67,7 @@
             this.dropDoorWie.FormattingEnabled = true;
             this.dropDoorWie.Location = new System.Drawing.Point(12, 96);
             this.dropDoorWie.Name = "dropDoorWie";
-            this.dropDoorWie.Size = new System.Drawing.Size(320, 40);
+            this.dropDoorWie.Size = new System.Drawing.Size(321, 40);
             this.dropDoorWie.TabIndex = 1;
             this.dropDoorWie.Text = "Wie verstopte de Ice?";
             this.dropDoorWie.SelectedIndexChanged += new System.EventHandler(this.dropDoorWie_SelectedIndexChanged);
@@ -83,7 +87,7 @@
             0,
             0});
             this.numTijd.Name = "numTijd";
-            this.numTijd.Size = new System.Drawing.Size(319, 39);
+            this.numTijd.Size = new System.Drawing.Size(321, 39);
             this.numTijd.TabIndex = 2;
             this.numTijd.Tag = "";
             this.numTijd.Value = new decimal(new int[] {
@@ -99,7 +103,7 @@
             this.dropDag.FormattingEnabled = true;
             this.dropDag.Location = new System.Drawing.Point(12, 187);
             this.dropDag.Name = "dropDag";
-            this.dropDag.Size = new System.Drawing.Size(319, 40);
+            this.dropDag.Size = new System.Drawing.Size(321, 40);
             this.dropDag.TabIndex = 3;
             this.dropDag.Text = "Welke dag is het?";
             this.dropDag.SelectedIndexChanged += new System.EventHandler(this.dropDag_SelectedIndexChanged);
@@ -109,7 +113,7 @@
             this.dateTimePicker1.Font = new System.Drawing.Font("Cambria", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dateTimePicker1.Location = new System.Drawing.Point(12, 233);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(319, 39);
+            this.dateTimePicker1.Size = new System.Drawing.Size(321, 39);
             this.dateTimePicker1.TabIndex = 4;
             this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
             // 
@@ -200,7 +204,7 @@
             // butAdd
             // 
             this.butAdd.Font = new System.Drawing.Font("Cambria", 20.25F);
-            this.butAdd.Location = new System.Drawing.Point(10, 392);
+            this.butAdd.Location = new System.Drawing.Point(12, 392);
             this.butAdd.Name = "butAdd";
             this.butAdd.Size = new System.Drawing.Size(321, 40);
             this.butAdd.TabIndex = 13;
@@ -212,11 +216,57 @@
             // 
             this.finalText.AutoSize = true;
             this.finalText.Font = new System.Drawing.Font("Cambria", 14.25F);
-            this.finalText.Location = new System.Drawing.Point(12, 367);
+            this.finalText.Location = new System.Drawing.Point(15, 367);
             this.finalText.Name = "finalText";
             this.finalText.Size = new System.Drawing.Size(199, 22);
             this.finalText.TabIndex = 14;
             this.finalText.Text = "WieWatWaarWanneer?";
+            // 
+            // devmode
+            // 
+            this.devmode.AutoSize = true;
+            this.devmode.Location = new System.Drawing.Point(12, 653);
+            this.devmode.Name = "devmode";
+            this.devmode.Size = new System.Drawing.Size(147, 17);
+            this.devmode.TabIndex = 15;
+            this.devmode.Text = "Devmodus (is voor joris :))";
+            this.devmode.UseVisualStyleBackColor = true;
+            this.devmode.CheckedChanged += new System.EventHandler(this.devmode_CheckedChanged);
+            // 
+            // inputbox
+            // 
+            this.inputbox.AcceptsReturn = true;
+            this.inputbox.Font = new System.Drawing.Font("Courier New", 10.25F);
+            this.inputbox.Location = new System.Drawing.Point(12, 438);
+            this.inputbox.Multiline = true;
+            this.inputbox.Name = "inputbox";
+            this.inputbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.inputbox.Size = new System.Drawing.Size(321, 97);
+            this.inputbox.TabIndex = 16;
+            // 
+            // outputbox
+            // 
+            this.outputbox.AcceptsReturn = true;
+            this.outputbox.Font = new System.Drawing.Font("Courier New", 10.25F);
+            this.outputbox.Location = new System.Drawing.Point(12, 541);
+            this.outputbox.Multiline = true;
+            this.outputbox.Name = "outputbox";
+            this.outputbox.ReadOnly = true;
+            this.outputbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.outputbox.Size = new System.Drawing.Size(321, 97);
+            this.outputbox.TabIndex = 17;
+            this.outputbox.Text = "Outputbox";
+            this.outputbox.WordWrap = false;
+            // 
+            // querybutton
+            // 
+            this.querybutton.Location = new System.Drawing.Point(166, 647);
+            this.querybutton.Name = "querybutton";
+            this.querybutton.Size = new System.Drawing.Size(167, 23);
+            this.querybutton.TabIndex = 18;
+            this.querybutton.Text = "Query";
+            this.querybutton.UseVisualStyleBackColor = true;
+            this.querybutton.Click += new System.EventHandler(this.querybutton_Click);
             // 
             // Form1
             // 
@@ -224,6 +274,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ClientSize = new System.Drawing.Size(1305, 682);
+            this.Controls.Add(this.querybutton);
+            this.Controls.Add(this.outputbox);
+            this.Controls.Add(this.inputbox);
+            this.Controls.Add(this.devmode);
             this.Controls.Add(this.finalText);
             this.Controls.Add(this.butAdd);
             this.Controls.Add(this.label6);
@@ -265,6 +319,10 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button butAdd;
         private System.Windows.Forms.Label finalText;
+        private System.Windows.Forms.CheckBox devmode;
+        private System.Windows.Forms.TextBox inputbox;
+        private System.Windows.Forms.TextBox outputbox;
+        private System.Windows.Forms.Button querybutton;
     }
 }
 
