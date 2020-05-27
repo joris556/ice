@@ -19,10 +19,13 @@ namespace IceStatistieken
         private string[] exOpties = { "Gecalled", "Betrapt" };
         private string vindert = "", verstoppert = "", dag = "", datum = "", tijd = "", calBetrapper = "";
         private bool called = false, betrapt = false;
+        private SQLiteConnection icedb_connection;
 
         public Form1()
         {
             InitializeComponent();
+            icedb_connection = new SQLiteConnection("Data Source=icedb.sqlite;Version=3;");
+
             dropWie.Items.AddRange(names);
             dropDoorWie.Items.AddRange(names);
             dropDag.Items.AddRange(dagen);
@@ -36,10 +39,34 @@ namespace IceStatistieken
             querybutton.Visible = false;
         }
 
+        private void CreateDB() //Doe maar 1 keer, ooit
+        {
+            SQLiteConnection.CreateFile("icedb.sqlite");
+        }
+
         private void butAdd_Click(object sender, EventArgs e)
         {
             //launch query
+
             reset();
+        }
+
+        private void LaunchQuery()
+        {
+            icedb_connection.Open();
+            SQLiteCommand command;
+            string q;
+
+            if (betrapt)
+            {
+
+            }
+            else if (called)
+            {
+
+            }
+
+            icedb_connection.Close();
         }
 
         private void UpdateFinalText()
@@ -55,6 +82,8 @@ namespace IceStatistieken
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             datum = dateTimePicker1.Value.ToString().Split()[0];
+            string[] s = datum.Split('/');
+            datum = s[2] + "-" + s[1] + "-" + s[0];
             UpdateFinalText();
         }
 
@@ -87,9 +116,52 @@ namespace IceStatistieken
 
         private void querybutton_Click(object sender, EventArgs e)
         {
-            outputbox.Text = "hey ";
-            outputbox.AppendText(Environment.NewLine);
-            outputbox.AppendText("hoi");
+            //try
+            //{
+                if (inputbox.Text[0] == '.')
+                {
+                    string query = inputbox.Text.Substring(1, inputbox.Text.Length - 1);
+
+                    icedb_connection.Open();
+                    SQLiteCommand command;
+                    if (query.Contains("SELECT") || query.Contains("select") || query.Contains("Select"))
+                    {
+                        command = new SQLiteCommand(query, icedb_connection);
+                        SQLiteDataReader reader = command.ExecuteReader();
+
+                        outputbox.Text = "";
+                        while (reader.Read())
+                        {
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                outputbox.AppendText(reader[i] + " | ");
+                                
+                            }
+                            outputbox.AppendText(Environment.NewLine);
+                        }
+
+                    }
+                    else
+                    {
+                        command = new SQLiteCommand(query, icedb_connection);
+                        command.ExecuteNonQuery();
+                    }
+                    icedb_connection.Close();
+                }
+            //}
+            //catch (Exception ex)
+            //{
+            //    outputbox.Text = "Invalid input";
+            //}
+
+            //outputbox.Text = "hey ";
+            //outputbox.AppendText(Environment.NewLine);
+            //outputbox.AppendText("hoi");
+        }
+
+        private void inputbox_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void reset()
@@ -148,7 +220,8 @@ namespace IceStatistieken
 
         private void numTijd_ValueChanged(object sender, EventArgs e)
         {
-            tijd = numTijd.Value.ToString();
+            string s = numTijd.Value.ToString();
+            tijd = s.Insert(2, ":");
             UpdateFinalText();
         }
 

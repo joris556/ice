@@ -243,6 +243,7 @@
             this.inputbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.inputbox.Size = new System.Drawing.Size(321, 97);
             this.inputbox.TabIndex = 16;
+            this.inputbox.TextChanged += new System.EventHandler(this.inputbox_TextChanged);
             // 
             // outputbox
             // 
