@@ -23,7 +23,7 @@ namespace IceStatistieken
         private SQLiteConnection icedb_connection;
 
         //statistieken
-        private string[] statOpties = { "Ices per tijd", "Ices per dag", "Ices per datum","Totaal verstopt pp", "Totaal gevonden pp", "Ices verstopt door:", "Ices gevonden door" };
+        private string[] statOpties = { "Ices per tijd", "Ices per dag", "Ices per datum","Totaal verstopt pp", "Totaal gevonden pp", "Ices verstopt door:", "Ices gevonden door", "Kosten pp" };
         private string[] ctypes = { "Pie", "Histogram" };
         private string[] statQueries =
         {
@@ -33,8 +33,11 @@ namespace IceStatistieken
             "SELECT verstopper, COUNT(vinder) FROM Vergev GROUP BY verstopper ORDER BY verstopper ASC;",
             "SELECT vinder, COUNT(vinder) FROM Vergev GROUP BY vinder ORDER BY vinder ASC;",
             "SELECT vinder, COUNT(vinder) FROM Vergev WHERE verstopper = 'yeet' GROUP BY vinder ORDER BY vinder ASC;",
-            "SELECT verstopper, COUNT(verstopper) FROM Vergev WHERE vinder = 'yeet' GROUP BY verstopper ORDER BY verstopper ASC;"
+            "SELECT verstopper, COUNT(verstopper) FROM Vergev WHERE vinder = 'yeet' GROUP BY verstopper ORDER BY verstopper ASC;",
+            "SELECT verstopper, COUNT(verstopper) * 3.14 FROM Vergev GROUP BY verstopper ORDER BY verstopper ASC;"
         };
+
+        private string[] statTitles = { "Terror tijden", "Dolle dagen", "Dodelijke data", "Vriendelijke verstoppers", "Vrolijke vinders", "Vertoppelt door: ", "Gevonden door: ", "Stevige spendeerders"};
 
         public Form1()
         {
@@ -172,47 +175,69 @@ namespace IceStatistieken
 
         private void querybutton_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-                if (inputbox.Text[0] == '.')
+
+            if (inputbox.Text[0] == '.')
+            {
+                string query = inputbox.Text.Substring(1, inputbox.Text.Length - 1);
+
+                icedb_connection.Open();
+                SQLiteCommand command;
+                if (query.Contains("SELECT") || query.Contains("select") || query.Contains("Select"))
                 {
-                    string query = inputbox.Text.Substring(1, inputbox.Text.Length - 1);
+                    command = new SQLiteCommand(query, icedb_connection);
+                    SQLiteDataReader reader = command.ExecuteReader();
 
-                    icedb_connection.Open();
-                    SQLiteCommand command;
-                    if (query.Contains("SELECT") || query.Contains("select") || query.Contains("Select"))
+                    outputbox.Text = "";
+                    while (reader.Read())
                     {
-                        command = new SQLiteCommand(query, icedb_connection);
-                        SQLiteDataReader reader = command.ExecuteReader();
-
-                        outputbox.Text = "";
-                        while (reader.Read())
+                        for (int i = 0; i < reader.FieldCount; i++)
                         {
-                            for (int i = 0; i < reader.FieldCount; i++)
-                            {
-                                outputbox.AppendText(reader[i] + " | ");
+                            outputbox.AppendText(reader[i] + " | ");
                                 
-                            }
-                            outputbox.AppendText(Environment.NewLine);
                         }
+                        outputbox.AppendText(Environment.NewLine);
+                    }
 
-                    }
-                    else
-                    {
-                        command = new SQLiteCommand(query, icedb_connection);
-                        command.ExecuteNonQuery();
-                    }
-                    icedb_connection.Close();
                 }
-            //}
-            //catch (Exception ex)
-            //{
-            //    outputbox.Text = "Invalid input";
-            //}
+                else
+                {
+                    command = new SQLiteCommand(query, icedb_connection);
+                    command.ExecuteNonQuery();
+                }
+                icedb_connection.Close();
+            }
+            else if (inputbox.Text[0] == '?')
+            {
+                outputbox.Text = "Begin SQL queries met een '.'";
+                outputbox.AppendText(Environment.NewLine);
+                outputbox.AppendText("Dit is om het idiootproof te maken :)");
+                outputbox.AppendText(Environment.NewLine);
+                outputbox.AppendText("Doe -e filenaam om te exporteren in csv");
+                outputbox.AppendText(Environment.NewLine);
+                outputbox.AppendText("Doe -i filenaam om te importeren uit csv");
+                outputbox.AppendText(Environment.NewLine);
+                outputbox.AppendText("data moet \"data\", \"data2\" ");
+                outputbox.AppendText(Environment.NewLine);
+                outputbox.AppendText("En in de volgorde:");
+                outputbox.AppendText(Environment.NewLine);
+                outputbox.AppendText("vind|verstop|dag|datum|tijd|plek|comment");
+                outputbox.AppendText(Environment.NewLine);
+                outputbox.AppendText("De laatste 2 zijn optioneel");
+                outputbox.AppendText(Environment.NewLine);
+                outputbox.AppendText("Credits naar Joris 2020");
+            }
+            else if (inputbox.Text[0] == '-')
+            {
+                if (inputbox.Text[1] == 'e')
+                {
 
-            //outputbox.Text = "hey ";
-            //outputbox.AppendText(Environment.NewLine);
-            //outputbox.AppendText("hoi");
+                }
+                else if (inputbox.Text[1] == 'i')
+                {
+
+                }
+            }
+
         }
 
         private void inputbox_TextChanged(object sender, EventArgs e)
@@ -222,9 +247,9 @@ namespace IceStatistieken
 
         private void ResetChart()
         {
-            chart1.Series["main"].Points.Clear();
+            chart1.Series["Ices"].Points.Clear();
             chart1.Titles.Clear();
-            chart1.Series["main"].IsValueShownAsLabel = true;
+            chart1.Series["Ices"].IsValueShownAsLabel = true;
         }
 
         private string[] Alltimes()
@@ -254,14 +279,14 @@ namespace IceStatistieken
 
             while (reader.Read())
             {
-                chart1.Series["main"].Points.AddXY(reader[0].ToString(), reader[1].ToString());
+                chart1.Series["Ices"].Points.AddXY(reader[0].ToString(), reader[1].ToString());
             }
             chart1.Titles.Add(title);
 
             if (pieChart)
-                chart1.Series["main"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+                chart1.Series["Ices"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
             else
-                chart1.Series["main"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+                chart1.Series["Ices"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
 
             icedb_connection.Close();
         }
@@ -299,9 +324,11 @@ namespace IceStatistieken
 
             string q;
             int i;
-            for (i = 0; i < 6; i++)
+            for (i = 0; i < statOpties.Length; i++)
                 if (statbox1.Text.ToString() == statOpties[i])
                     break;
+
+            string title;
 
             q = statQueries[i];
             if (i == 5 || i == 6)
@@ -312,10 +339,13 @@ namespace IceStatistieken
                     return;
                 }
                 q = q.Replace("yeet", statnamebox1.Text.ToString());
-                
-            }
+                title = statTitles[i] + statnamebox1.Text.ToString();
 
-            FillChart(q, "Hey");
+            }
+            else
+                title = statTitles[i];
+
+            FillChart(q, title);
 
             reset();
         }
