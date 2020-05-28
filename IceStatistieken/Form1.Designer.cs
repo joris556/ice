@@ -47,6 +47,10 @@
             this.inputbox = new System.Windows.Forms.TextBox();
             this.outputbox = new System.Windows.Forms.TextBox();
             this.querybutton = new System.Windows.Forms.Button();
+            this.plekbox = new System.Windows.Forms.TextBox();
+            this.comment = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numTijd)).BeginInit();
             this.SuspendLayout();
             // 
@@ -171,7 +175,7 @@
             // 
             this.dropCalBet.Font = new System.Drawing.Font("Cambria", 20.25F);
             this.dropCalBet.FormattingEnabled = true;
-            this.dropCalBet.Location = new System.Drawing.Point(12, 278);
+            this.dropCalBet.Location = new System.Drawing.Point(12, 368);
             this.dropCalBet.Name = "dropCalBet";
             this.dropCalBet.Size = new System.Drawing.Size(321, 40);
             this.dropCalBet.TabIndex = 10;
@@ -183,7 +187,7 @@
             // 
             this.dropCallert.Font = new System.Drawing.Font("Cambria", 20.25F);
             this.dropCallert.FormattingEnabled = true;
-            this.dropCallert.Location = new System.Drawing.Point(12, 324);
+            this.dropCallert.Location = new System.Drawing.Point(12, 414);
             this.dropCallert.Name = "dropCallert";
             this.dropCallert.Size = new System.Drawing.Size(321, 40);
             this.dropCallert.TabIndex = 11;
@@ -204,7 +208,7 @@
             // butAdd
             // 
             this.butAdd.Font = new System.Drawing.Font("Cambria", 20.25F);
-            this.butAdd.Location = new System.Drawing.Point(12, 392);
+            this.butAdd.Location = new System.Drawing.Point(12, 497);
             this.butAdd.Name = "butAdd";
             this.butAdd.Size = new System.Drawing.Size(321, 40);
             this.butAdd.TabIndex = 13;
@@ -216,7 +220,7 @@
             // 
             this.finalText.AutoSize = true;
             this.finalText.Font = new System.Drawing.Font("Cambria", 14.25F);
-            this.finalText.Location = new System.Drawing.Point(15, 367);
+            this.finalText.Location = new System.Drawing.Point(12, 472);
             this.finalText.Name = "finalText";
             this.finalText.Size = new System.Drawing.Size(199, 22);
             this.finalText.TabIndex = 14;
@@ -225,7 +229,7 @@
             // devmode
             // 
             this.devmode.AutoSize = true;
-            this.devmode.Location = new System.Drawing.Point(12, 653);
+            this.devmode.Location = new System.Drawing.Point(12, 758);
             this.devmode.Name = "devmode";
             this.devmode.Size = new System.Drawing.Size(147, 17);
             this.devmode.TabIndex = 15;
@@ -237,7 +241,7 @@
             // 
             this.inputbox.AcceptsReturn = true;
             this.inputbox.Font = new System.Drawing.Font("Courier New", 10.25F);
-            this.inputbox.Location = new System.Drawing.Point(12, 438);
+            this.inputbox.Location = new System.Drawing.Point(12, 543);
             this.inputbox.Multiline = true;
             this.inputbox.Name = "inputbox";
             this.inputbox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -249,7 +253,7 @@
             // 
             this.outputbox.AcceptsReturn = true;
             this.outputbox.Font = new System.Drawing.Font("Courier New", 10.25F);
-            this.outputbox.Location = new System.Drawing.Point(12, 541);
+            this.outputbox.Location = new System.Drawing.Point(12, 646);
             this.outputbox.Multiline = true;
             this.outputbox.Name = "outputbox";
             this.outputbox.ReadOnly = true;
@@ -261,7 +265,7 @@
             // 
             // querybutton
             // 
-            this.querybutton.Location = new System.Drawing.Point(166, 647);
+            this.querybutton.Location = new System.Drawing.Point(166, 752);
             this.querybutton.Name = "querybutton";
             this.querybutton.Size = new System.Drawing.Size(167, 23);
             this.querybutton.TabIndex = 18;
@@ -269,12 +273,57 @@
             this.querybutton.UseVisualStyleBackColor = true;
             this.querybutton.Click += new System.EventHandler(this.querybutton_Click);
             // 
+            // plekbox
+            // 
+            this.plekbox.Font = new System.Drawing.Font("Cambria", 20.25F);
+            this.plekbox.Location = new System.Drawing.Point(12, 278);
+            this.plekbox.Name = "plekbox";
+            this.plekbox.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.plekbox.Size = new System.Drawing.Size(321, 39);
+            this.plekbox.TabIndex = 19;
+            this.plekbox.TextChanged += new System.EventHandler(this.plekbox_TextChanged);
+            // 
+            // comment
+            // 
+            this.comment.Font = new System.Drawing.Font("Cambria", 20.25F);
+            this.comment.Location = new System.Drawing.Point(12, 323);
+            this.comment.Name = "comment";
+            this.comment.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.comment.Size = new System.Drawing.Size(321, 39);
+            this.comment.TabIndex = 20;
+            this.comment.TextChanged += new System.EventHandler(this.comment_TextChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Cambria", 20.25F);
+            this.label7.Location = new System.Drawing.Point(339, 281);
+            this.label7.Name = "label7";
+            this.label7.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label7.Size = new System.Drawing.Size(138, 32);
+            this.label7.TabIndex = 21;
+            this.label7.Text = "Vindplaats";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Cambria", 20.25F);
+            this.label8.Location = new System.Drawing.Point(339, 326);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(125, 32);
+            this.label8.TabIndex = 22;
+            this.label8.Text = "Comment";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(1305, 682);
+            this.ClientSize = new System.Drawing.Size(1305, 788);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.comment);
+            this.Controls.Add(this.plekbox);
             this.Controls.Add(this.querybutton);
             this.Controls.Add(this.outputbox);
             this.Controls.Add(this.inputbox);
@@ -324,6 +373,10 @@
         private System.Windows.Forms.TextBox inputbox;
         private System.Windows.Forms.TextBox outputbox;
         private System.Windows.Forms.Button querybutton;
+        private System.Windows.Forms.TextBox plekbox;
+        private System.Windows.Forms.TextBox comment;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
     }
 }
 

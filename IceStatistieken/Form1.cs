@@ -17,7 +17,7 @@ namespace IceStatistieken
         private string[] names = { "Bart", "Eduardo", "Gini", "Joris", "Len", "Mantas", "Martijn", "Thijs", "Een outsider" };
         private string[] dagen = { "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag" };
         private string[] exOpties = { "Gecalled", "Betrapt" };
-        private string vindert = "", verstoppert = "", dag = "", datum = "", tijd = "", calBetrapper = "";
+        private string vindert = "", verstoppert = "", dag = "", datum = "", tijd = "", calBetrapper = "", plaats = "", ice_comment = "";
         private bool called = false, betrapt = false;
         private SQLiteConnection icedb_connection;
 
@@ -55,11 +55,15 @@ namespace IceStatistieken
         {
             icedb_connection.Open();
             SQLiteCommand command;
-            string q;
+            string q = "INSERT INTO Vergev (vinder, verstopper, dag, datum, tijd, plek, comment) VALUES ('"
+                + vindert + "', '" + verstoppert + "', '" + dag + "', '" + datum + "', '" + tijd + "', '" + plaats + "', '" + ice_comment + "');";
+            command = new SQLiteCommand(q, icedb_connection);
+            command.ExecuteNonQuery();
 
             if (betrapt)
             {
-
+                string s = "SELECT vgid FROM Vergev WHERE vinder = '" + vindert + "' AND dag = '" + dag + "' AND datum = '" + datum +
+                    "' AND tijd = '" + tijd + "';"; 
             }
             else if (called)
             {
@@ -162,6 +166,16 @@ namespace IceStatistieken
         private void inputbox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void plekbox_TextChanged(object sender, EventArgs e)
+        {
+            plaats = plekbox.Text;
+        }
+
+        private void comment_TextChanged(object sender, EventArgs e)
+        {
+            ice_comment = comment.Text;
         }
 
         private void reset()
