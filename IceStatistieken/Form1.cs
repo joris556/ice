@@ -11,18 +11,34 @@ using System.Data.SQLite;
 
 namespace IceStatistieken
 {
+
     public partial class Form1 : Form
     {
         //Bart, Eduardo, Mantas, Joris, Gini, Thijs, Martijn, Len, outsiders
         private string[] names = { "Bart", "Eduardo", "Gini", "Joris", "Len", "Mantas", "Martijn", "Thijs", "Een outsider" };
         private string[] dagen = { "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag" };
         private string[] exOpties = { "Gecalled", "Betrapt" };
-        private string vindert = "", verstoppert = "", dag = "", datum = "", tijd = "", calBetrapper = "", plaats = "", ice_comment = "";
-        private bool called = false, betrapt = false;
+        private string vindert = "", verstoppert = "", dag = "", datum = "", tijd = "", calBetrapper = "", plaats = "", ice_comment = "", vanWie = "";
+        private bool called = false, betrapt = false, pieChart = true;
         private SQLiteConnection icedb_connection;
+
+        //statistieken
+        private string[] statOpties = { "Ices per tijd", "Ices per dag", "Ices per datum","Totaal verstopt pp", "Totaal gevonden pp", "Ices verstopt door:", "Ices gevonden door" };
+        private string[] ctypes = { "Pie", "Histogram" };
+        private string[] statQueries =
+        {
+            "SELECT tijd, COUNT(vinder) FROM Vergev GROUP BY tijd ORDER BY tijd ASC;",
+            "SELECT dag, COUNT(vinder) FROM Vergev GROUP BY dag ORDER BY dag ASC;",
+            "SELECT datum, COUNT(vinder) FROM Vergev GROUP BY datum ORDER BY datum ASC;",
+            "SELECT verstopper, COUNT(vinder) FROM Vergev GROUP BY verstopper ORDER BY verstopper ASC;",
+            "SELECT vinder, COUNT(vinder) FROM Vergev GROUP BY vinder ORDER BY vinder ASC;",
+            "SELECT vinder, COUNT(vinder) FROM Vergev WHERE verstopper = 'yeet' GROUP BY vinder ORDER BY vinder ASC;",
+            "SELECT verstopper, COUNT(verstopper) FROM Vergev WHERE vinder = 'yeet' GROUP BY verstopper ORDER BY verstopper ASC;"
+        };
 
         public Form1()
         {
+
             InitializeComponent();
             icedb_connection = new SQLiteConnection("Data Source=icedb.sqlite;Version=3;");
 
@@ -32,6 +48,12 @@ namespace IceStatistieken
             dropCalBet.Items.AddRange(exOpties);
             dropCalBet.Visible = false;
             dropCallert.Items.AddRange(names);
+
+            //stats
+            statnamebox1.Items.AddRange(names);
+            statnamebox1.Visible = false;
+            charttypebox.Items.AddRange(ctypes);
+            statbox1.Items.AddRange(statOpties);
 
             //devmodus
             inputbox.Visible = false;
@@ -47,8 +69,23 @@ namespace IceStatistieken
         private void butAdd_Click(object sender, EventArgs e)
         {
             //launch query
-
-            reset();
+            if (vindert != "" && verstoppert != "" && dag != "" && datum != "" && tijd != "")
+            {
+                if ((!betrapt && !called) && vindert != verstoppert)
+                {
+                    LaunchQuery();
+                    reset();
+                }
+                else if (calBetrapper != "")
+                {
+                    LaunchQuery();
+                    reset();
+                }
+                else
+                    MessageBox.Show("Vul alle velden in");
+            }
+            else
+                MessageBox.Show("Vul alle velden in");
         }
 
         private void LaunchQuery()
@@ -63,11 +100,26 @@ namespace IceStatistieken
             if (betrapt)
             {
                 string s = "SELECT vgid FROM Vergev WHERE vinder = '" + vindert + "' AND dag = '" + dag + "' AND datum = '" + datum +
-                    "' AND tijd = '" + tijd + "';"; 
+                    "' AND tijd = '" + tijd + "';";
+                command = new SQLiteCommand(s, icedb_connection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                reader.Read();
+                string vgid = reader[0] + "";
+                s = "INSERT INTO Betrapt VALUES ('" + vgid + "', '" + calBetrapper + "');";
+                command = new SQLiteCommand(s, icedb_connection);
+                command.ExecuteNonQuery();
             }
             else if (called)
             {
-
+                string s = "SELECT vgid FROM Vergev WHERE vinder = '" + vindert + "' AND dag = '" + dag + "' AND datum = '" + datum +
+                    "' AND tijd = '" + tijd + "';";
+                command = new SQLiteCommand(s, icedb_connection);
+                SQLiteDataReader reader = command.ExecuteReader();
+                reader.Read();
+                string vgid = reader[0] + "";
+                s = "INSERT INTO Called VALUES ('" + vgid + "', '" + calBetrapper + "');";
+                command = new SQLiteCommand(s, icedb_connection);
+                command.ExecuteNonQuery();
             }
 
             icedb_connection.Close();
@@ -168,6 +220,111 @@ namespace IceStatistieken
 
         }
 
+        private void ResetChart()
+        {
+            chart1.Series["main"].Points.Clear();
+            chart1.Titles.Clear();
+            chart1.Series["main"].IsValueShownAsLabel = true;
+        }
+
+        private string[] Alltimes()
+        {
+            string[] t = new string[24];
+            for (int i = 0; i < 24; i++)
+                t[i] = i + "0:00";
+
+            return t;
+        }
+
+        private void SetChartType(string type = "Pie")
+        {
+            if (type == "Pie")
+                pieChart = true;
+            else
+                pieChart = false;
+        }
+
+        private void FillChart(string query, string title)
+        {
+            ResetChart();
+
+            icedb_connection.Open();
+            SQLiteCommand command = new SQLiteCommand(query, icedb_connection);
+            SQLiteDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                chart1.Series["main"].Points.AddXY(reader[0].ToString(), reader[1].ToString());
+            }
+            chart1.Titles.Add(title);
+
+            if (pieChart)
+                chart1.Series["main"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            else
+                chart1.Series["main"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+
+            icedb_connection.Close();
+        }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void statbox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (statbox1.Text.ToString() == statOpties[5] || statbox1.Text.ToString() == statOpties[6])
+                statnamebox1.Visible = true;
+            else
+                statnamebox1.Visible = false;
+        }
+
+        private void statnamebox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            vanWie = statnamebox1.Text.ToString();
+        }
+
+        private void statbutton1_Click(object sender, EventArgs e)
+        {
+            if (statbox1.Text.ToString() == "Stats zijn de shit")
+            {
+                MessageBox.Show("Kies een optie");
+                return;
+            }
+
+            string q;
+            int i;
+            for (i = 0; i < 6; i++)
+                if (statbox1.Text.ToString() == statOpties[i])
+                    break;
+
+            q = statQueries[i];
+            if (i == 5 || i == 6)
+            {
+                if (statnamebox1.Text.ToString() == "Van wie?")
+                {
+                    MessageBox.Show("Vul alle velden in");
+                    return;
+                }
+                q = q.Replace("yeet", statnamebox1.Text.ToString());
+                
+            }
+
+            FillChart(q, "Hey");
+
+            reset();
+        }
+
+        private void charttypebox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetChartType(charttypebox.Text.ToString());
+        }
+
         private void plekbox_TextChanged(object sender, EventArgs e)
         {
             plaats = plekbox.Text;
@@ -196,6 +353,10 @@ namespace IceStatistieken
             dropCallert.Visible = false;
             dropCalBet.Visible = false;
             finalText.Text = "";
+            vanWie = "";
+            statnamebox1.Visible = false;
+            statnamebox1.Text = "Van wie?";
+            statbox1.Text = "Stats zijn de shit";
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -235,7 +396,9 @@ namespace IceStatistieken
         private void numTijd_ValueChanged(object sender, EventArgs e)
         {
             string s = numTijd.Value.ToString();
-            tijd = s.Insert(2, ":");
+            if (s == "0")
+                s = "0000";
+            tijd = s.Insert(s.Length-2, ":");
             UpdateFinalText();
         }
 
